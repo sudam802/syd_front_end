@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+const API_URL = "https://YOUR-RENDER-BACKEND-URL.onrender.com";
+
 const examples = [
   "Build me a home gym under $500",
   "Create a drone for aerial photography",
@@ -54,7 +56,7 @@ export default function ProjectPromptBox() {
       setPlan(null);
       setProductGroups([]);
 
-      const response = await fetch("process.env.NEXT_PUBLIC_API_URL/ai/generate-plan", {
+      const response = await fetch(`${API_URL}/ai/generate-plan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,8 +65,6 @@ export default function ProjectPromptBox() {
       });
 
       const data: BuildPlan = await response.json();
-      console.log("AI Plan", data);
-
       setPlan(data);
 
       const groups: ProductGroup[] = [];
@@ -73,23 +73,22 @@ export default function ProjectPromptBox() {
         if (!item.searchKeyword) continue;
 
         const productResponse = await fetch(
-          `http://localhost:3001/marketplaces/search?keyword=${encodeURIComponent(
+          `${API_URL}/marketplaces/search?keyword=${encodeURIComponent(
             item.searchKeyword
           )}`
         );
 
-        const productData: Product[] = await productResponse.json();
+        const productData = await productResponse.json();
 
         groups.push({
           componentName: item.name,
           quantity: item.quantity,
           reason: item.reason,
           searchKeyword: item.searchKeyword,
-          products: productData,
+          products: Array.isArray(productData) ? productData : [],
         });
       }
 
-      console.log("Product Groups", groups);
       setProductGroups(groups);
     } catch (error) {
       console.error("Failed to generate plan:", error);
@@ -139,7 +138,9 @@ export default function ProjectPromptBox() {
             disabled={!story.trim() || loading}
             className="mt-6 w-full rounded-2xl bg-yellow-400 px-6 py-4 font-bold text-black transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {loading ? "Generating Plan & Searching Products..." : "Generate Build Plan"}
+            {loading
+              ? "Generating Plan & Searching Products..."
+              : "Generate Build Plan"}
           </button>
         </div>
 
