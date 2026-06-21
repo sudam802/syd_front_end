@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const API_URL = "https://YOUR-RENDER-BACKEND-URL.onrender.com";
+const API_URL = "https://syd-backend.onrender.com/";
 
 const examples = [
   "Build me a home gym under $500",
