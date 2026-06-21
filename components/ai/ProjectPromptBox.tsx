@@ -54,7 +54,7 @@ export default function ProjectPromptBox() {
       setPlan(null);
       setProductGroups([]);
 
-      const response = await fetch("http://localhost:3001/ai/generate-plan", {
+      const response = await fetch("process.env.NEXT_PUBLIC_API_URL/ai/generate-plan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
