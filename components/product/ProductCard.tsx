@@ -1,4 +1,4 @@
-import { ProductResult } from "@/types/product";
+import { ProductResult } from "@/types/products";
 
 export default function ProductCard({ product }: { product: ProductResult }) {
   return (
